@@ -25,5 +25,6 @@
         <file>glsl/post/sobel_copy.frag.glsl</file>
         <file>glsl/surface/blinnPhong_copy.frag.glsl</file>
         <file>glsl/post/gaussian_copy.frag.glsl</file>
+        <file>glsl/post/gaussian_copy_copy.frag.glsl</file>
     </qresource>
 </RCC>

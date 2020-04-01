@@ -113,6 +113,7 @@ public:
          << QApplication::translate("ShaderControls", "RGB Warp", Q_NULLPTR)
          << QApplication::translate("ShaderControls", "Outline", Q_NULLPTR)
          << QApplication::translate("ShaderControls", "MotionBlur", Q_NULLPTR)
+         << QApplication::translate("ShaderControls", "Lens Flare", Q_NULLPTR)
         );
         label->setText(QApplication::translate("ShaderControls", "Shader Options", Q_NULLPTR));
         groupBox->setTitle(QApplication::translate("ShaderControls", "Surface Shader", Q_NULLPTR));

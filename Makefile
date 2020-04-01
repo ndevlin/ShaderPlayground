@@ -232,6 +232,7 @@ DIST          = /Users/Nathan/Qt5.9.1/5.9.1/clang_64/mkspecs/features/spec_pre.p
 		/Users/Nathan/Qt5.9.1/5.9.1/clang_64/mkspecs/features/qt_config.prf \
 		/Users/Nathan/Qt5.9.1/5.9.1/clang_64/mkspecs/macx-clang/qmake.conf \
 		/Users/Nathan/Qt5.9.1/5.9.1/clang_64/mkspecs/features/spec_post.prf \
+		project_package/.qmake.stash \
 		/Users/Nathan/Qt5.9.1/5.9.1/clang_64/mkspecs/features/exclusive_builds.prf \
 		/Users/Nathan/Qt5.9.1/5.9.1/clang_64/mkspecs/features/mac/sdk.prf \
 		/Users/Nathan/Qt5.9.1/5.9.1/clang_64/mkspecs/features/toolchain.prf \
@@ -440,6 +441,7 @@ Makefile: project_package/shaderFun.pro /Users/Nathan/Qt5.9.1/5.9.1/clang_64/mks
 		/Users/Nathan/Qt5.9.1/5.9.1/clang_64/mkspecs/features/qt_config.prf \
 		/Users/Nathan/Qt5.9.1/5.9.1/clang_64/mkspecs/macx-clang/qmake.conf \
 		/Users/Nathan/Qt5.9.1/5.9.1/clang_64/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/Users/Nathan/Qt5.9.1/5.9.1/clang_64/mkspecs/features/exclusive_builds.prf \
 		/Users/Nathan/Qt5.9.1/5.9.1/clang_64/mkspecs/features/mac/sdk.prf \
 		/Users/Nathan/Qt5.9.1/5.9.1/clang_64/mkspecs/features/toolchain.prf \
@@ -608,6 +610,7 @@ Makefile: project_package/shaderFun.pro /Users/Nathan/Qt5.9.1/5.9.1/clang_64/mks
 /Users/Nathan/Qt5.9.1/5.9.1/clang_64/mkspecs/features/qt_config.prf:
 /Users/Nathan/Qt5.9.1/5.9.1/clang_64/mkspecs/macx-clang/qmake.conf:
 /Users/Nathan/Qt5.9.1/5.9.1/clang_64/mkspecs/features/spec_post.prf:
+.qmake.stash:
 /Users/Nathan/Qt5.9.1/5.9.1/clang_64/mkspecs/features/exclusive_builds.prf:
 /Users/Nathan/Qt5.9.1/5.9.1/clang_64/mkspecs/features/mac/sdk.prf:
 /Users/Nathan/Qt5.9.1/5.9.1/clang_64/mkspecs/features/toolchain.prf:
@@ -685,6 +688,7 @@ clean: compiler_clean
 
 distclean: clean 
 	-$(DEL_FILE) -r ShaderFun.app
+	-$(DEL_FILE) .qmake.stash
 	-$(DEL_FILE) Makefile
 
 
@@ -725,6 +729,7 @@ qrc_glsl.cpp: project_package/glsl.qrc \
 		project_package/glsl/post/worleywarp_copy.frag.glsl \
 		project_package/glsl/post/worleywarp.frag.glsl \
 		project_package/glsl/post/greyscale_copy.frag.glsl \
+		project_package/glsl/post/gaussian_copy_copy.frag.glsl \
 		project_package/glsl/post/noOp.frag.glsl \
 		project_package/glsl/post/gaussian_copy.frag.glsl \
 		project_package/glsl/post/greyscale.frag.glsl
@@ -975,6 +980,131 @@ mainwindow.o: project_package/src/mainwindow.cpp project_package/src/mainwindow.
 		/Users/Nathan/Qt5.9.1/5.9.1/clang_64/lib/QtWidgets.framework/Headers/QWidget \
 		/Users/Nathan/Qt5.9.1/5.9.1/clang_64/lib/QtWidgets.framework/Headers/qwidget.h \
 		ui_mainwindow.h \
+		project_package/src/mygl.h \
+		project_package/src/openglcontext.h \
+		/Users/Nathan/Qt5.9.1/5.9.1/clang_64/lib/QtWidgets.framework/Headers/QOpenGLWidget \
+		/Users/Nathan/Qt5.9.1/5.9.1/clang_64/lib/QtWidgets.framework/Headers/qopenglwidget.h \
+		/Users/Nathan/Qt5.9.1/5.9.1/clang_64/lib/QtGui.framework/Headers/QOpenGLFunctions_3_2_Core \
+		/Users/Nathan/Qt5.9.1/5.9.1/clang_64/lib/QtGui.framework/Headers/qopenglfunctions_3_2_core.h \
+		/Users/Nathan/Qt5.9.1/5.9.1/clang_64/lib/QtGui.framework/Headers/QOpenGLFunctions_3_2_Compatibility \
+		/Users/Nathan/Qt5.9.1/5.9.1/clang_64/lib/QtGui.framework/Headers/qopenglfunctions_3_2_compatibility.h \
+		/Users/Nathan/Qt5.9.1/5.9.1/clang_64/lib/QtCore.framework/Headers/QTimer \
+		/Users/Nathan/Qt5.9.1/5.9.1/clang_64/lib/QtCore.framework/Headers/qtimer.h \
+		project_package/src/utils.h \
+		project_package/src/shaderprograms/postprocessshader.h \
+		project_package/src/shaderprograms/shaderprogram.h \
+		project_package/src/la.h \
+		project_package/include/glm/glm.hpp \
+		project_package/include/glm/detail/_fixes.hpp \
+		project_package/include/glm/fwd.hpp \
+		project_package/include/glm/detail/type_int.hpp \
+		project_package/include/glm/detail/setup.hpp \
+		project_package/include/glm/detail/type_float.hpp \
+		project_package/include/glm/detail/type_vec.hpp \
+		project_package/include/glm/detail/precision.hpp \
+		project_package/include/glm/detail/type_mat.hpp \
+		project_package/include/glm/vec2.hpp \
+		project_package/include/glm/detail/type_vec2.hpp \
+		project_package/include/glm/detail/_swizzle.hpp \
+		project_package/include/glm/detail/_swizzle_func.hpp \
+		project_package/include/glm/detail/type_vec2.inl \
+		project_package/include/glm/vec3.hpp \
+		project_package/include/glm/detail/type_vec3.hpp \
+		project_package/include/glm/detail/type_vec3.inl \
+		project_package/include/glm/vec4.hpp \
+		project_package/include/glm/detail/type_vec4.hpp \
+		project_package/include/glm/detail/type_vec4.inl \
+		project_package/include/glm/mat2x2.hpp \
+		project_package/include/glm/detail/type_mat2x2.hpp \
+		project_package/include/glm/detail/type_mat2x2.inl \
+		project_package/include/glm/mat2x3.hpp \
+		project_package/include/glm/detail/type_mat2x3.hpp \
+		project_package/include/glm/detail/type_mat2x3.inl \
+		project_package/include/glm/mat2x4.hpp \
+		project_package/include/glm/detail/type_mat2x4.hpp \
+		project_package/include/glm/detail/type_mat2x4.inl \
+		project_package/include/glm/mat3x2.hpp \
+		project_package/include/glm/detail/type_mat3x2.hpp \
+		project_package/include/glm/detail/type_mat3x2.inl \
+		project_package/include/glm/mat3x3.hpp \
+		project_package/include/glm/detail/type_mat3x3.hpp \
+		project_package/include/glm/detail/type_mat3x3.inl \
+		project_package/include/glm/mat3x4.hpp \
+		project_package/include/glm/detail/type_mat3x4.hpp \
+		project_package/include/glm/detail/type_mat3x4.inl \
+		project_package/include/glm/mat4x2.hpp \
+		project_package/include/glm/detail/type_mat4x2.hpp \
+		project_package/include/glm/detail/type_mat4x2.inl \
+		project_package/include/glm/mat4x3.hpp \
+		project_package/include/glm/detail/type_mat4x3.hpp \
+		project_package/include/glm/detail/type_mat4x3.inl \
+		project_package/include/glm/mat4x4.hpp \
+		project_package/include/glm/detail/type_mat4x4.hpp \
+		project_package/include/glm/detail/type_mat4x4.inl \
+		project_package/include/glm/trigonometric.hpp \
+		project_package/include/glm/detail/func_trigonometric.hpp \
+		project_package/include/glm/detail/func_trigonometric.inl \
+		project_package/include/glm/detail/_vectorize.hpp \
+		project_package/include/glm/detail/type_vec1.hpp \
+		project_package/include/glm/detail/type_vec1.inl \
+		project_package/include/glm/exponential.hpp \
+		project_package/include/glm/detail/func_exponential.hpp \
+		project_package/include/glm/detail/func_exponential.inl \
+		project_package/include/glm/detail/func_vector_relational.hpp \
+		project_package/include/glm/detail/func_vector_relational.inl \
+		project_package/include/glm/common.hpp \
+		project_package/include/glm/detail/func_common.hpp \
+		project_package/include/glm/detail/func_common.inl \
+		project_package/include/glm/packing.hpp \
+		project_package/include/glm/detail/func_packing.hpp \
+		project_package/include/glm/detail/func_packing.inl \
+		project_package/include/glm/detail/type_half.hpp \
+		project_package/include/glm/detail/type_half.inl \
+		project_package/include/glm/geometric.hpp \
+		project_package/include/glm/detail/func_geometric.hpp \
+		project_package/include/glm/detail/func_geometric.inl \
+		project_package/include/glm/matrix.hpp \
+		project_package/include/glm/detail/func_matrix.hpp \
+		project_package/include/glm/detail/func_matrix.inl \
+		project_package/include/glm/vector_relational.hpp \
+		project_package/include/glm/integer.hpp \
+		project_package/include/glm/detail/func_integer.hpp \
+		project_package/include/glm/detail/func_integer.inl \
+		project_package/include/glm/gtc/matrix_transform.hpp \
+		project_package/include/glm/gtc/constants.hpp \
+		project_package/include/glm/gtc/constants.inl \
+		project_package/include/glm/gtc/matrix_transform.inl \
+		project_package/include/glm/gtx/string_cast.hpp \
+		project_package/include/glm/gtx/integer.hpp \
+		project_package/include/glm/gtx/integer.inl \
+		project_package/include/glm/gtx/quaternion.hpp \
+		project_package/include/glm/gtc/quaternion.hpp \
+		project_package/include/glm/gtx/quaternion.inl \
+		project_package/include/glm/gtx/norm.hpp \
+		project_package/include/glm/gtx/norm.inl \
+		project_package/include/glm/gtx/string_cast.inl \
+		project_package/include/glm/gtc/type_ptr.hpp \
+		project_package/include/glm/gtc/type_ptr.inl \
+		/Users/Nathan/Qt5.9.1/5.9.1/clang_64/lib/QtGui.framework/Headers/QMatrix4x4 \
+		/Users/Nathan/Qt5.9.1/5.9.1/clang_64/lib/QtGui.framework/Headers/qmatrix4x4.h \
+		/Users/Nathan/Qt5.9.1/5.9.1/clang_64/lib/QtGui.framework/Headers/QVector4D \
+		/Users/Nathan/Qt5.9.1/5.9.1/clang_64/lib/QtGui.framework/Headers/qvector4d.h \
+		project_package/src/drawable.h \
+		project_package/src/texture.h \
+		project_package/src/shaderprograms/surfaceshader.h \
+		/Users/Nathan/Qt5.9.1/5.9.1/clang_64/lib/QtCore.framework/Headers/QString \
+		/Users/Nathan/Qt5.9.1/5.9.1/clang_64/lib/QtCore.framework/Headers/qstring.h \
+		project_package/src/scene/quad.h \
+		/Users/Nathan/Qt5.9.1/5.9.1/clang_64/lib/QtGui.framework/Headers/QOpenGLContext \
+		/Users/Nathan/Qt5.9.1/5.9.1/clang_64/lib/QtGui.framework/Headers/qopenglcontext.h \
+		/Users/Nathan/Qt5.9.1/5.9.1/clang_64/lib/QtGui.framework/Headers/QOpenGLBuffer \
+		/Users/Nathan/Qt5.9.1/5.9.1/clang_64/lib/QtGui.framework/Headers/qopenglbuffer.h \
+		/Users/Nathan/Qt5.9.1/5.9.1/clang_64/lib/QtGui.framework/Headers/QOpenGLShaderProgram \
+		/Users/Nathan/Qt5.9.1/5.9.1/clang_64/lib/QtGui.framework/Headers/qopenglshaderprogram.h \
+		project_package/src/scene/mesh.h \
+		project_package/src/scene/camera.h \
+		/Users/Nathan/Qt5.9.1/5.9.1/clang_64/lib/QtGui.framework/Headers/QOpenGLVertexArrayObject \
+		/Users/Nathan/Qt5.9.1/5.9.1/clang_64/lib/QtGui.framework/Headers/qopenglvertexarrayobject.h \
 		/Users/Nathan/Qt5.9.1/5.9.1/clang_64/lib/QtWidgets.framework/Headers/QDesktopWidget \
 		/Users/Nathan/Qt5.9.1/5.9.1/clang_64/lib/QtWidgets.framework/Headers/qdesktopwidget.h \
 		/Users/Nathan/Qt5.9.1/5.9.1/clang_64/lib/QtGui.framework/Headers/QResizeEvent \

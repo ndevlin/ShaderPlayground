@@ -94,6 +94,11 @@
       <string>MotionBlur</string>
      </property>
     </item>
+    <item>
+     <property name="text">
+      <string>Lens Flare</string>
+     </property>
+    </item>
    </widget>
   </widget>
   <widget class="QLabel" name="label">

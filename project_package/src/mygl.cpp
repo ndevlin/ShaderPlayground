@@ -358,6 +358,9 @@ void MyGL::createShaders()
     m_postprocessShaders.push_back(motionBlur);
 
 
+    std::shared_ptr<PostProcessShader> lensFlare = std::make_shared<PostProcessShader>(this);
+    lensFlare->create(":/glsl/post/passthrough.vert.glsl", ":/glsl/post/gaussian_copy_copy.frag.glsl");
+    m_postprocessShaders.push_back(lensFlare);
 
 
     slot_setCurrentPostprocessShaderProgram(0);
