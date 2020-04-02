@@ -51,7 +51,7 @@ void MyGL::initializeGL()
     // Set the size with which points should be rendered
     glPointSize(5);
     // Set the color with which the screen is filled at the start of each render call.
-    glClearColor(0.f, 1.f, 1.f, 1);
+    glClearColor(0.f, 0.f, 0.f, 1);
 
     printGLErrorLog();
 
