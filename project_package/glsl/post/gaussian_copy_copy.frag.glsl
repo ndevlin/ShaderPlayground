@@ -36,7 +36,7 @@ vec3 textureDistorted(
 // Takes in a vec2 and generates a pseudorandom but consistent value for it
 float noise2D(vec2 n)
 {
-    float toReturn = (fract(sin(dot(n, vec2(12.9898, 4.1414))) * 43758.5453)); //* 16 + 128.f;
+    float toReturn = (fract(sin(dot(n, vec2(12.9898, 4.1414))) * 43758.5453));
 
     return 10.0 * pow(toReturn, 1000.0);
 }
@@ -53,8 +53,23 @@ float interpNoise2D(float x, float y)
     float v3 = noise2D(vec2(intX, intY + 1));
     float v4 = noise2D(vec2(intX + 1, intY + 1));
 
+
+    v1 = cos((1.0 - v1) * 3.14159265359 * 0.5);
+    v2 = cos((1.0 - v2) * 3.14159265359 * 0.5);
+    v3 = cos((1.0 - v3) * 3.14159265359 * 0.5);
+    v4 = cos((1.0 - v4) * 3.14159265359 * 0.5);
+
+    fractX = fractX * fractX * (3.0 - (2.0 * fractX));
+
+    fractY = fractY * fractY * (3.0 - (2.0 * fractY));
+
+
     float i1 = mix(v1, v2, fractX);
     float i2 = mix(v3, v4, fractX);
+
+    i1 = i1 * i1 * (3.0 - (2.0 * i1));
+    i2 = i2 * i2 * (3.0 - (2.0 * i2));
+
     return mix(i1, i2, fractY);
 }
 
@@ -94,7 +109,7 @@ void main()
 
     vec2 texelSize = 1.0 / vec2(textureSize(u_RenderedTexture, 0));
 
-    float distortionAmount = 5;
+    float distortionAmount = 7;
 
     vec3 distortion = vec3(-texelSize.x * distortionAmount, 0.0, texelSize.x * distortionAmount);
 
@@ -163,22 +178,20 @@ void main()
     vec4 scaledValue = max(vec4(0.0), inColor + bias) * scale;
 
 
-    float dustVal = 100.0 * fbm(fs_UV[0] * u_Dimensions[0], fs_UV[1] * u_Dimensions[1]);
+    float dustVal = 100.0 * pow(clamp(fbm(fs_UV[0], fs_UV[1]), 0.0, 0.9), 0.9);
+
+    dustVal += 0.1;
+
+    clamp(dustVal, 0.0, 1.0);
+
+    dustVal = sqrt(dustVal);
 
 
+    vec3 postDustColor = dustVal * vec3(scaledValue * haloWeight);
 
+    color += postDustColor;
 
+    //color = vec3(dustVal);
 
-
-    color += vec3(scaledValue * haloWeight);
-
-
-    color = vec3(dustVal);
-
-
-    float val = 100.0 * pow(clamp(fbm(fs_UV[0], fs_UV[1]), 0.0, 0.9), 0.9);
-
-
-    color = vec3(val);
 
 }
