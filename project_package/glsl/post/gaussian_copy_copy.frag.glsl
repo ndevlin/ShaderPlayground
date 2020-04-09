@@ -100,12 +100,26 @@ float fbm(float x, float y)
 
 void main()
 {
+    // Set colors near white to pure - only for testing purposes
+
+    vec4 origColor = texture(u_RenderedTexture, fs_UV);
+
+    if(origColor[0] + origColor[1] + origColor[2] > 2.5)
+    {
+        origColor = vec4(1.0, 1.0, 1.0, 1.0);
+    }
+
+    color = vec3(origColor);
+
+
+
+
 
     vec2 newCoord = -fs_UV + vec2(1.0);
 
-    int numGhosts = 1;
+    int numGhosts = 4;
 
-    float ghostDispersal = 0.01;
+    float ghostDispersal = 0.5;//0.01;
 
     vec2 texelSize = 1.0 / vec2(textureSize(u_RenderedTexture, 0));
 
@@ -121,7 +135,7 @@ void main()
 
     vec4 bias = vec4(-0.99, -0.99, -0.99, 1.0);
 
-    vec4 result = vec4(0.0);
+    vec4 lensFlare = vec4(0.0);
 
     for(int i = 1; i <= numGhosts; i++)
     {
@@ -131,9 +145,11 @@ void main()
         weight = pow(1.0 - weight, 2.0);
 
         //vec4 inColor = texture(u_RenderedTexture, offset);
+        // Chromatic Abberation
         vec4 inColor = vec4(textureDistorted(u_RenderedTexture,
                          offset, direction, distortion), 1.0);
 
+        // Set colors near white to pure white, for testing purposes
         if(inColor[0] + inColor[1] + inColor[2] > 2.5)
         {
             inColor = vec4(1.0, 1.0, 1.0, 1.0);
@@ -141,19 +157,11 @@ void main()
 
         vec4 scaledValue = max(vec4(0.0), inColor + bias) * scale;
 
-        result += scaledValue * weight;
+        lensFlare += scaledValue * weight;
     }
 
-    color = vec3(result);
+    //color = vec3(result);
 
-    vec4 origColor = texture(u_RenderedTexture, fs_UV);
-
-    if(origColor[0] + origColor[1] + origColor[2] > 2.5)
-    {
-        origColor = vec4(1.0, 1.0, 1.0, 1.0);
-    }
-
-    color += vec3(origColor);
 
 
 
@@ -166,9 +174,11 @@ void main()
 
 
     //vec4 inColor = texture(u_RenderedTexture, fs_UV + haloVec);
+    // Chromatic Abberation
     vec4 inColor = vec4(textureDistorted(u_RenderedTexture,
                      fs_UV + haloVec, direction, distortion), 1.0);
 
+    // Set colors near white to pure white, for testing purposes
     if(inColor[0] + inColor[1] + inColor[2] > 2.5)
     {
         inColor = vec4(1.0, 1.0, 1.0, 1.0);
@@ -187,9 +197,14 @@ void main()
     dustVal = sqrt(dustVal);
 
 
-    vec3 postDustColor = dustVal * vec3(scaledValue * haloWeight);
+    vec3 postDustHaloColor = dustVal * vec3(scaledValue * haloWeight);
 
-    color += postDustColor;
+    lensFlare *= dustVal;
+
+    lensFlare += vec4(postDustHaloColor, 0.0);
+
+    color += vec3(lensFlare);
+
 
     //color = vec3(dustVal);
 
