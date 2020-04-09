@@ -94,6 +94,11 @@ float fbm(float x, float y)
 
 
 
+float linearNoise(float xCoord)
+{
+    return fract(sin(xCoord * 100 * 3.14159265359) * 1.5);
+}
+
 
 
 
@@ -117,7 +122,7 @@ void main()
 
     vec2 newCoord = -fs_UV + vec2(1.0);
 
-    int numGhosts = 4;
+    int numGhosts = 1;
 
     float ghostDispersal = 0.5;//0.01;
 
@@ -203,10 +208,43 @@ void main()
 
     lensFlare += vec4(postDustHaloColor, 0.0);
 
+
+
+
+    float starBurstOffset = (fs_CameraPos[0] + fs_CameraPos[1] + fs_CameraPos[2]) / 10000.0;
+
+    vec2 centerVec = fs_UV - vec2(0.5);
+    float d = length(centerVec);
+    float radial = acos(centerVec.x / d) / (3.14159265359);
+
+
+    float mask = linearNoise(radial + starBurstOffset) * linearNoise(radial - starBurstOffset * 0.5);
+
+    //float mask = linearNoise(radial);
+
+
+    mask = clamp(mask + (1.0 - smoothstep(0.0, 0.3, d)), 0.0, 1.0);
+
+    mask *= (0.5 / d);
+
+    mask *= mask;
+
+    mask = clamp(mask, 0.0, 1.0);
+
+    lensFlare = ((mask * lensFlare) + (2.0 * lensFlare)) / 3.0;
+
+
+    lensFlare *= 0.75;
+
+
     color += vec3(lensFlare);
 
 
     //color = vec3(dustVal);
 
 
+    //color = vec3(mask);
+
 }
+
+
