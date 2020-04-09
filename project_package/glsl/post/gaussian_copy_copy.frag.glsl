@@ -96,7 +96,37 @@ float fbm(float x, float y)
 
 float linearNoise(float xCoord)
 {
-    return fract(sin(xCoord * 100 * 3.14159265359) * 1.5);
+    //return fract(sin(xCoord * 100 * 3.14159265359) * 1.5);
+
+    return fract(sin(int(xCoord * 2500) % 1234) * 1);
+}
+
+
+vec3 coloredLinearNoise(float xCoord)
+{
+    vec3 result = vec3(0.0);
+
+
+    result[0] = clamp(cos(xCoord * 2.5), 0.0, 1.0);
+
+    result[1] = clamp(cos(xCoord * 3.5), 0.0, 1.0);
+
+    result[2] = clamp(2 * cos(xCoord * 5), 0.0, 1.0);
+
+
+
+    result[0] += clamp(cos(xCoord * 12) / 2.0 + 0.5, 0.0, 1.0);
+
+    result[1] += clamp(cos(xCoord * 25) / 2.0 + 0.5, 0.0, 1.0);
+
+    result[2] += clamp(2 * cos(xCoord * 40) / 2.0 + 0.5, 0.0, 1.0);
+
+    result = (result + vec3(1.0, 1.0, 1.0)) / 2.0;
+
+
+    result = clamp(result, 0.0, 1.0);
+
+    return result;
 }
 
 
@@ -109,7 +139,7 @@ void main()
 
     vec4 origColor = texture(u_RenderedTexture, fs_UV);
 
-    if(origColor[0] + origColor[1] + origColor[2] > 2.5)
+    if(origColor[0] + origColor[1] + origColor[2] > 2.8)
     {
         origColor = vec4(1.0, 1.0, 1.0, 1.0);
     }
@@ -142,6 +172,31 @@ void main()
 
     vec4 lensFlare = vec4(0.0);
 
+
+
+    float starBurstOffset = (fs_CameraPos[0] + fs_CameraPos[1] + fs_CameraPos[2]) / 10000.0;
+
+    vec2 centerVec = fs_UV - vec2(0.5);
+    float d = length(centerVec);
+    float radians = acos(centerVec.x / d) / (2.0 * 3.14159265359);
+
+
+    float mask = linearNoise(radians + starBurstOffset) * linearNoise(radians - starBurstOffset * 0.5);
+
+    //float mask = linearNoise(radians);
+
+
+    mask = clamp(mask + (1.0 - smoothstep(0.0, 0.3, d)), 0.0, 1.0);
+
+    mask *= (0.5 / d);
+
+    mask *= mask;
+
+    mask = clamp(mask, 0.0, 1.0);
+
+
+
+
     for(int i = 1; i <= numGhosts; i++)
     {
         vec2 offset = newCoord + ghostVec * float(i);
@@ -155,12 +210,14 @@ void main()
                          offset, direction, distortion), 1.0);
 
         // Set colors near white to pure white, for testing purposes
-        if(inColor[0] + inColor[1] + inColor[2] > 2.5)
+        if(inColor[0] + inColor[1] + inColor[2] > 2.8)
         {
             inColor = vec4(1.0, 1.0, 1.0, 1.0);
         }
 
         vec4 scaledValue = max(vec4(0.0), inColor + bias) * scale;
+
+        scaledValue *= vec4(coloredLinearNoise(d), 1.0);
 
         lensFlare += scaledValue * weight;
     }
@@ -184,13 +241,16 @@ void main()
                      fs_UV + haloVec, direction, distortion), 1.0);
 
     // Set colors near white to pure white, for testing purposes
-    if(inColor[0] + inColor[1] + inColor[2] > 2.5)
+    if(inColor[0] + inColor[1] + inColor[2] > 2.8)
     {
         inColor = vec4(1.0, 1.0, 1.0, 1.0);
     }
 
 
     vec4 scaledValue = max(vec4(0.0), inColor + bias) * scale;
+
+    scaledValue *= vec4(coloredLinearNoise(d), 1.0);
+
 
 
     float dustVal = 100.0 * pow(clamp(fbm(fs_UV[0], fs_UV[1]), 0.0, 0.9), 0.9);
@@ -210,29 +270,10 @@ void main()
 
 
 
-
-    float starBurstOffset = (fs_CameraPos[0] + fs_CameraPos[1] + fs_CameraPos[2]) / 10000.0;
-
-    vec2 centerVec = fs_UV - vec2(0.5);
-    float d = length(centerVec);
-    float radial = acos(centerVec.x / d) / (3.14159265359);
+    lensFlare = ((mask * lensFlare) + (1.0 * lensFlare)) / 2.0;
 
 
-    float mask = linearNoise(radial + starBurstOffset) * linearNoise(radial - starBurstOffset * 0.5);
-
-    //float mask = linearNoise(radial);
-
-
-    mask = clamp(mask + (1.0 - smoothstep(0.0, 0.3, d)), 0.0, 1.0);
-
-    mask *= (0.5 / d);
-
-    mask *= mask;
-
-    mask = clamp(mask, 0.0, 1.0);
-
-    lensFlare = ((mask * lensFlare) + (2.0 * lensFlare)) / 3.0;
-
+    lensFlare = clamp(lensFlare, 0.0, 1.0);
 
     lensFlare *= 0.75;
 
@@ -243,7 +284,11 @@ void main()
     //color = vec3(dustVal);
 
 
-    //color = vec3(mask);
+
+
+
+
+    //color = coloredLinearNoise(d);
 
 }
 
