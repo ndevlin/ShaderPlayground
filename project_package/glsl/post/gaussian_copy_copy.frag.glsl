@@ -189,6 +189,11 @@ void main()
 
 
 
+    vec3 rainbowTex = coloredLinearNoise(d);
+
+    rainbowTex = clamp(rainbowTex + (1.0 - smoothstep(0.1, 0.3, d)), 0.0, 1.0);
+
+
 
     for(int i = 1; i <= numGhosts; i++)
     {
@@ -210,7 +215,7 @@ void main()
 
         vec4 scaledValue = max(vec4(0.0), inColor + bias) * scale;
 
-        scaledValue *= vec4(coloredLinearNoise(d), 1.0);
+        scaledValue *= vec4(rainbowTex, 1.0);
 
         lensFlare += scaledValue * weight;
     }
@@ -242,7 +247,7 @@ void main()
 
     vec4 scaledValue = max(vec4(0.0), inColor + bias) * scale;
 
-    scaledValue *= vec4(coloredLinearNoise(d), 1.0);
+    scaledValue *= vec4(rainbowTex, 1.0);
 
 
 
@@ -276,15 +281,9 @@ void main()
 
     //color = vec3(dustVal);
 
+    //vec3 rainbow = clamp(rainbowTex + (1.0 - smoothstep(0.1, 0.3, d)), 0.0, 1.0);
 
-
-
-
-
-    color = coloredLinearNoise(d);
-
-    color = clamp(color + (1.0 - smoothstep(0.1, 0.3, d)), 0.0, 1.0);
-
+    //color = mix(rainbow, color, 0.5);
 }
 
 
