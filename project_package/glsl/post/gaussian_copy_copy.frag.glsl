@@ -125,27 +125,13 @@ vec3 coloredLinearNoise(float xCoord)
 
 
 
-
-void main()
+vec3 lensFlare(vec2 uvIn)
 {
-    // Set colors near white to pure - only for testing purposes
+    vec3 outColor = vec3(0.0, 0.0, 0.0);
 
-    vec4 origColor = texture(u_RenderedTexture, fs_UV);
+    vec2 newCoord = -uvIn + vec2(1.0);
 
-    if(origColor[0] + origColor[1] + origColor[2] > 2.8)
-    {
-        origColor = vec4(1.0, 1.0, 1.0, 1.0);
-    }
-
-    color = vec3(origColor);
-
-
-
-
-
-    vec2 newCoord = -fs_UV + vec2(1.0);
-
-    int numGhosts = 1;
+    int numGhosts = 5;
 
     float ghostDispersal = 0.5;//0.01;
 
@@ -155,13 +141,13 @@ void main()
 
     vec3 distortion = vec3(-texelSize.x * distortionAmount, 0.0, texelSize.x * distortionAmount);
 
-    vec2 ghostVec = (vec2(0.5)  - fs_UV) * ghostDispersal;
+    vec2 ghostVec = (vec2(0.5)  -uvIn) * ghostDispersal;
 
     vec2 direction = normalize(ghostVec);
 
-    vec4 scale = vec4(100.0, 100.0, 100.0, 1.0);
+    vec4 scale = vec4(1000.0, 1000.0, 1000.0, 1.0);
 
-    vec4 bias = vec4(-0.99, -0.99, -0.99, 1.0);
+    vec4 bias = vec4(-0.999, -0.999, -0.999, 1.0);
 
     vec4 lensFlare = vec4(0.0);
 
@@ -169,7 +155,7 @@ void main()
 
     float starBurstOffset = (fs_CameraPos[0] + fs_CameraPos[1] + fs_CameraPos[2]) / 10000.0;
 
-    vec2 centerVec = fs_UV - vec2(0.5);
+    vec2 centerVec = uvIn - vec2(0.5);
     float d = length(centerVec);
     float radians = acos(centerVec.x / d) / (2.0 * 3.14159265359);
 
@@ -229,14 +215,14 @@ void main()
 
     vec2 haloVec = normalize(ghostVec) * haloWidth;
 
-    float haloWeight = length(vec2(0.5) - fract(fs_UV + haloVec)) / length(vec2(0.5));
+    float haloWeight = length(vec2(0.5) - fract(uvIn + haloVec)) / length(vec2(0.5));
     haloWeight = pow(1.0 - haloWeight, 5.0);
 
 
     //vec4 inColor = texture(u_RenderedTexture, fs_UV + haloVec);
     // Chromatic Abberation
     vec4 inColor = vec4(textureDistorted(u_RenderedTexture,
-                     fs_UV + haloVec, direction, distortion), 1.0);
+                     uvIn + haloVec, direction, distortion), 1.0);
 
     // Set colors near white to pure white, for testing purposes
     if(inColor[0] + inColor[1] + inColor[2] > 2.8)
@@ -251,7 +237,7 @@ void main()
 
 
 
-    float dustVal = 100.0 * pow(clamp(fbm(fs_UV[0], fs_UV[1]), 0.0, 0.9), 0.9);
+    float dustVal = 100.0 * pow(clamp(fbm(uvIn[0], uvIn[1]), 0.0, 0.9), 0.9);
 
     dustVal += 0.1;
 
@@ -276,7 +262,9 @@ void main()
     lensFlare *= 0.75;
 
 
-    color += vec3(lensFlare);
+    outColor += vec3(lensFlare);
+
+    return outColor;
 
 
     //color = vec3(dustVal);
@@ -284,6 +272,40 @@ void main()
     //vec3 rainbow = clamp(rainbowTex + (1.0 - smoothstep(0.1, 0.3, d)), 0.0, 1.0);
 
     //color = mix(rainbow, color, 0.5);
+}
+
+
+
+
+void main()
+{
+    // Set colors near white to pure - only for testing purposes
+
+    vec4 origColor = texture(u_RenderedTexture, fs_UV);
+
+    if(origColor[0] + origColor[1] + origColor[2] > 2.8)
+    {
+        origColor = vec4(1.0, 1.0, 1.0, 1.0);
+    }
+
+    color = vec3(origColor);
+
+
+    //color += lensFlare(fs_UV);
+
+
+    float offset[3] = float[](0.0, 1.3846153846, 3.2307692308);
+    float weight[3] = float[](0.2270270270, 0.3162162162, 0.0702702703);
+
+
+        //color *= weight[0];
+        for (int i=1; i<3; i++)
+        {
+            color += lensFlare(fs_UV + vec2(0.0, offset[i] / u_Dimensions));// * weight[i];
+
+            color += lensFlare(fs_UV - vec2(0.0, offset[i] / u_Dimensions));// * weight[i];
+        }
+
 }
 
 
