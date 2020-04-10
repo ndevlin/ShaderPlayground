@@ -107,14 +107,17 @@ vec3 coloredLinearNoise(float xCoord)
     vec3 result = vec3(0.0);
 
 
-    result[0] = sin(3 * xCoord);
+    result[0] = sin(12 * (xCoord - 0.3));
 
-    result[1] = cos(3 * xCoord) + sin(3 * xCoord) - 0.5;
+    result[1] = cos(8 * (xCoord - 0.2)) + sin(8 * (xCoord - 0.2)) - 0.5;
 
-    result[2] = cos(3 * xCoord);
+    result[2] = cos(6 * (xCoord - 0.1));
 
+    result -= vec3(0.2, 0.2, 0.2);
 
-    result = clamp(result, 0.0, 1.0);
+    result = clamp(result, 0.0, 0.8);
+
+    result += vec3(0.4, 0.4, 0.4);
 
     return result;
 }
@@ -279,6 +282,8 @@ void main()
 
 
     color = coloredLinearNoise(d);
+
+    color = clamp(color + (1.0 - smoothstep(0.1, 0.3, d)), 0.0, 1.0);
 
 }
 
