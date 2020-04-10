@@ -294,17 +294,17 @@ void main()
     //color += lensFlare(fs_UV);
 
 
+    // Gaussian Blur on lens flare
+    // This method is computationally expensive;
+    // should switch to 2-pass texture-based version
     float offset[3] = float[](0.0, 1.3846153846, 3.2307692308);
-    float weight[3] = float[](0.2270270270, 0.3162162162, 0.0702702703);
 
+    for (int i=1; i<3; i++)
+    {
+        color += lensFlare(fs_UV + vec2(0.0, offset[i] / u_Dimensions));
 
-        //color *= weight[0];
-        for (int i=1; i<3; i++)
-        {
-            color += lensFlare(fs_UV + vec2(0.0, offset[i] / u_Dimensions));// * weight[i];
-
-            color += lensFlare(fs_UV - vec2(0.0, offset[i] / u_Dimensions));// * weight[i];
-        }
+        color += lensFlare(fs_UV - vec2(0.0, offset[i] / u_Dimensions));
+    }
 
 }
 
