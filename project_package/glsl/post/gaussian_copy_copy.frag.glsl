@@ -11,18 +11,7 @@ in vec4 fs_CameraPos;
 
 out vec3 color;
 
-uniform int u_Time;
-uniform ivec2 u_Dimensions;
-
-uniform mat4 u_Proj;        // The matrix that defines the camera's projection.
-uniform mat4 u_ProjInv;        // Inverse of the projection matrix
-
-uniform mat4 u_CurrentToPrevMat;
-uniform mat4 u_InverseViewMat;
-
 uniform sampler2D u_RenderedTexture;
-uniform sampler2D u_DepthTexture;
-
 
 // Simulates Chromatic Aberration by sampling each channel at an offset
 vec3 textureDistorted(
