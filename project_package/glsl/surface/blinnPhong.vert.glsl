@@ -1,5 +1,6 @@
 // Written by Nathan Devlin 10/1/19
 
+// BlinnPhong Vertex Shader
 
 #version 150
 

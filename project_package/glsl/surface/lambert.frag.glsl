@@ -1,5 +1,7 @@
 #version 330
 
+// Lambertian Fragment Shader
+
 uniform sampler2D u_Texture; // The texture to be read from
 
 in vec4 fs_Nor;

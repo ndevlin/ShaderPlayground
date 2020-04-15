@@ -1,5 +1,7 @@
 // Written by Nathan Devlin 4/15/20
 
+// Lens Flare Fragment Shader
+
 #version 150
 
 in vec2 fs_UV;
@@ -58,7 +60,6 @@ float interpNoise2D(float x, float y)
     float v3 = noise2D(vec2(intX, intY + 1));
     float v4 = noise2D(vec2(intX + 1, intY + 1));
 
-
     v1 = cos((1.0 - v1) * 3.14159265359 * 0.5);
     v2 = cos((1.0 - v2) * 3.14159265359 * 0.5);
     v3 = cos((1.0 - v3) * 3.14159265359 * 0.5);
@@ -67,7 +68,6 @@ float interpNoise2D(float x, float y)
     fractX = fractX * fractX * (3.0 - (2.0 * fractX));
 
     fractY = fractY * fractY * (3.0 - (2.0 * fractY));
-
 
     float i1 = mix(v1, v2, fractX);
     float i2 = mix(v3, v4, fractX);
@@ -272,7 +272,6 @@ void main()
     // Gaussian Blur on lens flare
     // Quickly implemented Gaussian Blur on flaring; slows down performance noticably
     // Texture-based blurring would be much better
-
     float offset[3] = float[](0.0, 1.3846153846, 3.2307692308);
 
     for (int i=1; i<3; i++)

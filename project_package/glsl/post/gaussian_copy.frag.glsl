@@ -1,5 +1,7 @@
 // Written by Nathan Devlin 3/20/20
 
+// Motion Blur Fragment Shader
+
 #version 150
 
 in vec2 fs_UV;

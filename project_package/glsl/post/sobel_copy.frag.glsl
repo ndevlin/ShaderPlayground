@@ -1,5 +1,7 @@
 // Written by Nathan Devlin 10/16/19
 
+// Outline Fragment shader
+
 #version 150
 
 in vec2 fs_UV;

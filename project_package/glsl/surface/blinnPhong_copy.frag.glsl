@@ -1,5 +1,7 @@
 // Written by Nathan Devlin 10/1/19
 
+// Toon Fragment Shader
+
 #version 330
 
 uniform sampler2D u_Texture;

@@ -182,22 +182,22 @@
     </item>
     <item>
      <property name="text">
-      <string>Vertex Deformation</string>
+      <string>Spherical Vertex Deformation</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>Deform EC</string>
+      <string>Stretchy Deformation</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>Surface Noise EC</string>
+      <string>Surface Noise</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>Toon Shader EC</string>
+      <string>Toon Shader</string>
      </property>
     </item>
    </widget>

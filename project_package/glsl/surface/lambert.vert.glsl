@@ -1,5 +1,7 @@
 #version 150
 
+// Lambertian Vertex Shader
+
 uniform mat4 u_Model;       // The matrix that defines the transformation of the
                             // object we're rendering.
 
@@ -10,9 +12,7 @@ uniform mat4 u_View;        // The matrix that defines the camera's transformati
 uniform mat4 u_Proj;        // The matrix that defines the camera's projection.
 
 in vec4 vs_Pos;
-
 in vec4 vs_Nor;
-
 in vec2 vs_UV;
 
 out vec4 fs_Nor;            // The array of normals that has been transformed by u_ModelInvTr.

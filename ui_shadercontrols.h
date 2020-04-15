@@ -123,10 +123,10 @@ public:
          << QApplication::translate("ShaderControls", "Blinn-Phong", Q_NULLPTR)
          << QApplication::translate("ShaderControls", "Matcap", Q_NULLPTR)
          << QApplication::translate("ShaderControls", "Color Gradient", Q_NULLPTR)
-         << QApplication::translate("ShaderControls", "Vertex Deformation", Q_NULLPTR)
-         << QApplication::translate("ShaderControls", "Deform EC", Q_NULLPTR)
-         << QApplication::translate("ShaderControls", "Surface Noise EC", Q_NULLPTR)
-         << QApplication::translate("ShaderControls", "Toon Shader EC", Q_NULLPTR)
+         << QApplication::translate("ShaderControls", "Spherical Vertex Deformation", Q_NULLPTR)
+         << QApplication::translate("ShaderControls", "Stretchy Deformation", Q_NULLPTR)
+         << QApplication::translate("ShaderControls", "Surface Noise", Q_NULLPTR)
+         << QApplication::translate("ShaderControls", "Toon Shader", Q_NULLPTR)
         );
         groupBox_3->setTitle(QApplication::translate("ShaderControls", "Model", Q_NULLPTR));
         modelComboBox->clear();

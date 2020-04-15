@@ -1,5 +1,7 @@
 // Written by Nathan Devlin 10/1/19
 
+// Matcap Vertex Shader
+
 #version 150
 
 uniform mat4 u_Model;

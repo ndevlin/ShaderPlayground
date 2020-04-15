@@ -1,5 +1,7 @@
 // Written by Nathan Devlin 10/16/19
 
+// Bubbles Worley Warp Fragment shader
+
 #version 150
 
 uniform ivec2 u_Dimensions;

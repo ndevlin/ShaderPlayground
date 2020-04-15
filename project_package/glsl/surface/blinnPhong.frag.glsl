@@ -1,5 +1,7 @@
 // Written by Nathan Devlin 10/1/19
 
+// Blinn Phong Fragment Shader
+
 #version 330
 
 uniform sampler2D u_Texture; // The texture to be read from by this shader

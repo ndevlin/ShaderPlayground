@@ -1,5 +1,7 @@
 // Written by Nathan Devlin 10/15/19
 
+// Grayscale and Vignette Fragment Shader
+
 #version 150
 
 in vec2 fs_UV;

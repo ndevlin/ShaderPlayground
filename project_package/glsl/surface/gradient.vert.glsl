@@ -1,5 +1,7 @@
 // Written by Nathan Devlin 10/1/19
 
+// Irridescent Gradient Vertex Shader
+
 #version 150
 
 uniform mat4 u_Model;
