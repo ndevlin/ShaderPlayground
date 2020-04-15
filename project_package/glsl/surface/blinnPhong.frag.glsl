@@ -2,7 +2,7 @@
 
 // Blinn Phong Fragment Shader
 
-//
+// Highlight
 
 #version 330
 

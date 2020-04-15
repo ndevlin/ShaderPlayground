@@ -2,7 +2,7 @@
 
 // Lens Flare Fragment Shader
 
-//
+// Highlight
 
 #version 150
 

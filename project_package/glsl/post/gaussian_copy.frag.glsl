@@ -2,7 +2,7 @@
 
 // Motion Blur Fragment Shader
 
-//
+// Highlight
 
 #version 150
 

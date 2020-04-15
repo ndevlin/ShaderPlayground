@@ -2,7 +2,7 @@
 
 // BlinnPhong Vertex Shader
 
-//
+// Highlight
 
 #version 150
 

@@ -1,6 +1,6 @@
 // Written by Nathan Devlin
 
-//
+// Highlight
 
 #include "mygl.h"
 #include <la.h>

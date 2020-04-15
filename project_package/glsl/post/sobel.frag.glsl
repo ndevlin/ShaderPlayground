@@ -2,7 +2,7 @@
 
 // Sobel Fragment shader
 
-//
+// Highlight
 
 #version 150
 

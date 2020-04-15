@@ -2,7 +2,7 @@
 
 // Spherical Deformation Vertex Shader
 
-//
+// Highlight
 
 #version 150
 

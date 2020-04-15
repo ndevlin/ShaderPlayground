@@ -2,7 +2,7 @@
 
 // Pointillism Fragment Shader
 
-//
+// Highlight
 
 #version 150
 
