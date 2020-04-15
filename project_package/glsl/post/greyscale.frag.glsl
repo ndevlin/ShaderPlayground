@@ -10,10 +10,6 @@ out vec3 color;
 
 uniform sampler2D u_RenderedTexture;
 
-
-uniform sampler2D u_DepthTexture;
-
-
 void main()
 {
     vec4 colorIn = texture(u_RenderedTexture, fs_UV);

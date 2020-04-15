@@ -14,12 +14,8 @@ uniform mat4 u_Proj;        // The matrix that defines the camera's projection.
 uniform vec4 u_CameraPos;   // vec4 holding the world position of the camera
 
 in vec4 vs_Pos;
-
 in vec4 vs_Nor;
-
 in vec2 vs_UV;
-
-
 
 out vec4 fs_Nor;            // The array of normals that has been transformed by u_ModelInvTr
 out vec4 fs_LightVec;       // The direction of virtual light lies relative to to current vertex

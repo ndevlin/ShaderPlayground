@@ -266,9 +266,9 @@ void main()
     color = vec3(origColor);
 
 
-    //color += lensFlare(fs_UV);
+    color += lensFlare(fs_UV);
 
-
+    /*
     // Gaussian Blur on lens flare
     // Quickly implemented Gaussian Blur on flaring; slows down performance noticably
     // Texture-based blurring would be much better
@@ -280,7 +280,7 @@ void main()
 
         color += lensFlare(fs_UV - vec2(0.0, offset[i] / u_Dimensions));
     }
-
+    */
 
 }
 
