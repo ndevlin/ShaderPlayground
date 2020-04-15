@@ -1,3 +1,5 @@
+// Created by Adam Mally
+
 #include "openglcontext.h"
 #include <utils.h>
 
@@ -173,7 +175,7 @@ void OpenGLContext::timerUpdate()
 {
     // This function is called roughly 60 times per second.
     // Use it to update your scene and then tell it to redraw.
-    // (Don't update your scene in paintGL, because it
+    // (Don't update the scene in paintGL, because it
     // sometimes gets called automatically by Qt.)
 
     update();

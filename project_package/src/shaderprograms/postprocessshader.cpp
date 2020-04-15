@@ -1,3 +1,5 @@
+// Created by Adam Mally, modified by Nathan Devlin
+
 #include "postprocessshader.h"
 #include <QDateTime>
 
@@ -13,27 +15,26 @@ PostProcessShader::~PostProcessShader()
 void PostProcessShader::setupMemberVars()
 {
     attrPos = context->glGetAttribLocation(prog, "vs_Pos");
+
     attrUV  = context->glGetAttribLocation(prog, "vs_UV");
 
     unifTime = context->glGetUniformLocation(prog, "u_Time");
-    unifSampler2D = context->glGetUniformLocation(prog, "u_RenderedTexture");
-    unifDimensions = context->glGetUniformLocation(prog, "u_Dimensions");
 
+    unifSampler2D = context->glGetUniformLocation(prog, "u_RenderedTexture");
+
+    unifDimensions = context->glGetUniformLocation(prog, "u_Dimensions");
 
     unifSampler2D_DepthText = context->glGetUniformLocation(prog, "u_DepthTexture");
 
-
-
     unifView = context->glGetUniformLocation(prog, "u_View");
-    unifProj = context->glGetUniformLocation(prog, "u_Proj");
 
+    unifProj = context->glGetUniformLocation(prog, "u_Proj");
 
     unifProjInv = context->glGetUniformLocation(prog, "u_ProjInv");
 
 
     attrCamPos = context->glGetUniformLocation(prog, "u_CameraPos");
     setGPUCamPos(attrCamPos, glm::vec4(0.f, 0.f, 12.f, 1.f)); // Set initial position
-
 
     unifInverseViewMat = context->glGetUniformLocation(prog, "u_InverseViewMat");
 

@@ -1,3 +1,5 @@
+// Created by Adam Mally, modified by Nathan Devlin
+
 #include "surfaceshader.h"
 
 
@@ -12,18 +14,24 @@ SurfaceShader::~SurfaceShader()
 void SurfaceShader::setupMemberVars()
 {
     attrPos = context->glGetAttribLocation(prog, "vs_Pos");
+
     attrNor = context->glGetAttribLocation(prog, "vs_Nor");
+
     attrUV  = context->glGetAttribLocation(prog, "vs_UV");
+
     unifModel      = context->glGetUniformLocation(prog, "u_Model");
+
     unifModelInvTr = context->glGetUniformLocation(prog, "u_ModelInvTr");
+
     unifView       = context->glGetUniformLocation(prog, "u_View");
+
     unifProj       = context->glGetUniformLocation(prog, "u_Proj");
 
     unifSampler2D  = context->glGetUniformLocation(prog, "u_Texture");
+
     unifTime = context->glGetUniformLocation(prog, "u_Time");
 
-
-    // Added handle setup
+    // Camera handle setup
     attrCamPos = context->glGetUniformLocation(prog, "u_CameraPos");
     setGPUCamPos(attrCamPos, glm::vec4(0.f, 0.f, 12.f, 1.f)); // Set initial position
 
@@ -32,10 +40,7 @@ void SurfaceShader::setupMemberVars()
 }
 
 
-
-
-
-//This function, as its name implies, uses the passed in GL widget
+//This function uses the passed in GL widget
 void SurfaceShader::draw(Drawable &d, int textureSlot = 0)
 {
     useMe();
@@ -50,17 +55,20 @@ void SurfaceShader::draw(Drawable &d, int textureSlot = 0)
     //   * This Drawable has a vertex buffer for this attribute.
     // If so, it binds the appropriate buffers to each attribute.
 
-    if (attrPos != -1 && d.bindPos()) {
+    if (attrPos != -1 && d.bindPos())
+    {
         context->glEnableVertexAttribArray(attrPos);
         context->glVertexAttribPointer(attrPos, 4, GL_FLOAT, false, 0, NULL);
     }
 
-    if (attrNor != -1 && d.bindNor()) {
+    if (attrNor != -1 && d.bindNor())
+    {
         context->glEnableVertexAttribArray(attrNor);
         context->glVertexAttribPointer(attrNor, 4, GL_FLOAT, false, 0, NULL);
     }
 
-    if (attrUV != -1 && d.bindUV()) {
+    if (attrUV != -1 && d.bindUV())
+    {
         context->glEnableVertexAttribArray(attrUV);
         context->glVertexAttribPointer(attrUV, 2, GL_FLOAT, false, 0, NULL);
     }

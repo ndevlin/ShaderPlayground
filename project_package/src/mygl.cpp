@@ -1,10 +1,11 @@
+// Written by Nathan Devlin
+
 #include "mygl.h"
 #include <la.h>
 #include <QResizeEvent>
 #include <iostream>
 
 #include <QString>
-
 
 MyGL::MyGL(QWidget *parent)
     : OpenGLContext(parent),
@@ -36,7 +37,7 @@ MyGL::~MyGL()
 void MyGL::initializeGL()
 {
     // Create an OpenGL context using Qt's QOpenGLFunctions_3_2_Core class
-    // If you were programming in a non-Qt context you might use GLEW (GL Extension Wrangler)instead
+    // Comparable to GLEW (GL Extension Wrangler)
     initializeOpenGLFunctions();
     // Print out some information about the current OpenGL context
     debugContextVersion();
@@ -80,7 +81,6 @@ void MyGL::resizeGL(int w, int h)
 
     glm::mat4 projInv = glm::inverse(proj);
 
-
     mp_progSurfaceCurrent->setViewProjMatrix(view, proj, projInv, viewInv, prevViewProj * viewInv);
 
     for(std::shared_ptr<PostProcessShader> p : m_postprocessShaders)
@@ -91,11 +91,9 @@ void MyGL::resizeGL(int w, int h)
     printGLErrorLog();
 }
 
-//This function is called by Qt any time your GL window is supposed to update
-//For example, when the function update() is called, paintGL is called implicitly.
+//Called by Qt any time the GL window is supposed to update
 void MyGL::paintGL()
 {
-
     // Updates the shader's camera position variable
     mp_progSurfaceCurrent->setGPUCamPos(mp_progSurfaceCurrent->attrCamPos, glm::vec4(m_camera.eye, 1.f));
 
@@ -122,14 +120,9 @@ void MyGL::render3DScene()
     // Clear the screen so that we only see newly drawn images
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
-
-
     // Draw the background texture first
     //mp_modelCurrent->bindBGTexture();
     //mp_progPostprocessNoOp->draw(m_geomQuad, 2);
-
-
 
     prevViewProj = currViewProj;
 
@@ -142,19 +135,14 @@ void MyGL::render3DScene()
 
     glm::mat4 projInv = glm::inverse(proj);
 
-
-
-    // Set the surface shader's transformation matrices
+    // Set the shaders' transformation matrices
     mp_progSurfaceCurrent->setViewProjMatrix(view, proj, projInv, viewInv, prevViewProj * viewInv);
     mp_progSurfaceCurrent->setModelMatrix(glm::mat4());
-
 
     mp_progPostprocessCurrent->setViewProjMatrix(view, proj, projInv, viewInv, prevViewProj * viewInv);
     mp_progPostprocessCurrent->setModelMatrix(glm::mat4());
 
-
     bindAppropriateTexture();
-
 
     // Draw the model
     mp_progSurfaceCurrent->draw(*mp_modelCurrent, 0);
@@ -171,10 +159,8 @@ void MyGL::performPostprocessRenderPass()
     // Clear the screen
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, m_depthTexture);
-
 
     // Bind our texture in Texture Unit 0
     glActiveTexture(GL_TEXTURE0);
@@ -189,10 +175,6 @@ void MyGL::createRenderBuffers()
     // Initialize the frame buffers and render textures
     glGenFramebuffers(1, &m_frameBuffer);
     glGenTextures(1, &m_renderedTexture);
-
-
-    //glGenRenderbuffers(1, &m_depthRenderBuffer);
-
 
 
     glBindFramebuffer(GL_FRAMEBUFFER, m_frameBuffer);
@@ -213,14 +195,6 @@ void MyGL::createRenderBuffers()
     glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m_renderedTexture, 0);
 
 
-    /*
-    // Initialize our depth buffer
-    glBindRenderbuffer(GL_RENDERBUFFER, m_depthRenderBuffer);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, this->width() * this->devicePixelRatio(), this->height() * this->devicePixelRatio());
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_depthRenderBuffer);
-    */
-
-
     glGenTextures(1, &m_depthTexture);
     glBindTexture(GL_TEXTURE_2D, m_depthTexture);
     // Give an empty image to OpenGL ( the last "0" )
@@ -237,8 +211,6 @@ void MyGL::createRenderBuffers()
     // Set m_renderedTexture as the color output of our frame buffer
     glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, m_depthTexture, 0);
 
-
-
     glActiveTexture(GL_TEXTURE1);
 
     glBindTexture(GL_TEXTURE_2D, m_depthTexture);
@@ -253,14 +225,7 @@ void MyGL::createRenderBuffers()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-
     glActiveTexture(GL_TEXTURE0);
-
-
-
-    // Sets the color output of the fragment shader to be stored in GL_COLOR_ATTACHMENT0, which we previously set to m_renderedTextures[i]
-    //GLenum drawBuffers[1] = {GL_COLOR_ATTACHMENT0};
-    //glDrawBuffers(1, drawBuffers); // "1" is the size of drawBuffers
 
     if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
     {
@@ -294,22 +259,19 @@ void MyGL::createShaders()
     m_surfaceShaders.push_back(deform);
 
 
-    // Extra Credit
     std::shared_ptr<SurfaceShader> deformEC = std::make_shared<SurfaceShader>(this);
     deformEC->create(":/glsl/surface/deform_copy.vert.glsl", ":/glsl/surface/deform_copy.frag.glsl");
     m_surfaceShaders.push_back(deformEC);
 
-    std::shared_ptr<SurfaceShader> surfaceColorEC = std::make_shared<SurfaceShader>(this);
-    surfaceColorEC->create(":/glsl/surface/lambert.vert.glsl", ":/glsl/surface/lambert_copy.frag.glsl");
-    m_surfaceShaders.push_back(surfaceColorEC);
+    std::shared_ptr<SurfaceShader> surfaceColor = std::make_shared<SurfaceShader>(this);
+    surfaceColor->create(":/glsl/surface/lambert.vert.glsl", ":/glsl/surface/lambert_copy.frag.glsl");
+    m_surfaceShaders.push_back(surfaceColor);
 
-    std::shared_ptr<SurfaceShader> toonEC = std::make_shared<SurfaceShader>(this);
-    toonEC->create(":/glsl/surface/blinnPhong.vert.glsl", ":/glsl/surface/blinnPhong_copy.frag.glsl");
-    m_surfaceShaders.push_back(toonEC);
-
+    std::shared_ptr<SurfaceShader> toon = std::make_shared<SurfaceShader>(this);
+    toon->create(":/glsl/surface/blinnPhong.vert.glsl", ":/glsl/surface/blinnPhong_copy.frag.glsl");
+    m_surfaceShaders.push_back(toon);
 
     slot_setCurrentSurfaceShaderProgram(0);
-
 
 
     // Post-process shaders
@@ -338,18 +300,17 @@ void MyGL::createShaders()
     m_postprocessShaders.push_back(worley);
 
 
-    // Extra Credit
-    std::shared_ptr<PostProcessShader> pointEC = std::make_shared<PostProcessShader>(this);
-    pointEC->create(":/glsl/post/passthrough.vert.glsl", ":/glsl/post/worleywarp_copy.frag.glsl");
-    m_postprocessShaders.push_back(pointEC);
+    std::shared_ptr<PostProcessShader> point = std::make_shared<PostProcessShader>(this);
+    point->create(":/glsl/post/passthrough.vert.glsl", ":/glsl/post/worleywarp_copy.frag.glsl");
+    m_postprocessShaders.push_back(point);
 
-    std::shared_ptr<PostProcessShader> colorEC = std::make_shared<PostProcessShader>(this);
-    colorEC->create(":/glsl/post/passthrough.vert.glsl", ":/glsl/post/greyscale_copy.frag.glsl");
-    m_postprocessShaders.push_back(colorEC);
+    std::shared_ptr<PostProcessShader> color = std::make_shared<PostProcessShader>(this);
+    color->create(":/glsl/post/passthrough.vert.glsl", ":/glsl/post/greyscale_copy.frag.glsl");
+    m_postprocessShaders.push_back(color);
 
-    std::shared_ptr<PostProcessShader> sobelGrayEC = std::make_shared<PostProcessShader>(this);
-    sobelGrayEC->create(":/glsl/post/passthrough.vert.glsl", ":/glsl/post/sobel_copy.frag.glsl");
-    m_postprocessShaders.push_back(sobelGrayEC);
+    std::shared_ptr<PostProcessShader> sobelGray = std::make_shared<PostProcessShader>(this);
+    sobelGray->create(":/glsl/post/passthrough.vert.glsl", ":/glsl/post/sobel_copy.frag.glsl");
+    m_postprocessShaders.push_back(sobelGray);
 
 
 

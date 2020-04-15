@@ -1,4 +1,4 @@
-// Written by Nathan Devlin 4/20/20
+// Written by Nathan Devlin 4/15/20
 
 #version 150
 
@@ -20,6 +20,7 @@ uniform sampler2D u_RenderedTexture;
 uniform sampler2D u_DepthTexture;
 
 
+// Simulates Chromatic Aberration by sampling each channel at an offset
 vec3 textureDistorted(
         sampler2D tex,
         vec2 uvCoord,
@@ -33,7 +34,9 @@ vec3 textureDistorted(
                 );
 }
 
+
 // Takes in a vec2 and generates a pseudorandom but consistent value for it
+// Used to procedurally generate a dust texture
 float noise2D(vec2 n)
 {
     float toReturn = (fract(sin(dot(n, vec2(12.9898, 4.1414))) * 43758.5453));
@@ -41,6 +44,8 @@ float noise2D(vec2 n)
     return 10.0 * pow(toReturn, 1000.0);
 }
 
+
+//Takes in x and y values and uses them to create an interpolated noise value
 float interpNoise2D(float x, float y)
 {
     int intX = int(floor(x));
@@ -74,8 +79,7 @@ float interpNoise2D(float x, float y)
 }
 
 
-
-
+// Fractal Brownian Motion noise algorithm
 float fbm(float x, float y)
 {
     float total = 0;
@@ -93,16 +97,16 @@ float fbm(float x, float y)
 }
 
 
-
+// Returns a pseudorandom number that is consistent based on input
+// Procedurally emulates a 1-D black and white random texture
 float linearNoise(float xCoord)
 {
-    //return fract(sin(xCoord * 100 * 3.14159265359) * 1.5);
-
     return fract(sin(int(xCoord * 2500) % 1234) * 1);
 }
 
 
-vec3 coloredLinearNoise(float xCoord)
+// Procedurally simulates a 1-D rainbow texture
+vec3 coloredRainbow(float xCoord)
 {
     vec3 result = vec3(0.0);
 
@@ -123,20 +127,22 @@ vec3 coloredLinearNoise(float xCoord)
 }
 
 
-
-
+// Returns a color value for the flare that should appear at this UV coordinate
 vec3 lensFlare(vec2 uvIn)
 {
-    vec3 outColor = vec3(0.0, 0.0, 0.0);
+    vec4 lensFlare = vec4(0.0);
 
+    // Mirrors bright spots across the center of the image
     vec2 newCoord = -uvIn + vec2(1.0);
 
+    // Number of repeated ghosts of bright spot
     int numGhosts = 5;
 
-    float ghostDispersal = 0.5;//0.01;
+    float ghostDispersal = 0.5;
 
     vec2 texelSize = 1.0 / vec2(textureSize(u_RenderedTexture, 0));
 
+    // Amount of Chromatic Aberration
     float distortionAmount = 7;
 
     vec3 distortion = vec3(-texelSize.x * distortionAmount, 0.0, texelSize.x * distortionAmount);
@@ -145,40 +151,32 @@ vec3 lensFlare(vec2 uvIn)
 
     vec2 direction = normalize(ghostVec);
 
+    // Determines threshold for what parts of image flare
+    // With these values, the brightest 0.1% of colors will flare
     vec4 scale = vec4(1000.0, 1000.0, 1000.0, 1.0);
-
     vec4 bias = vec4(-0.999, -0.999, -0.999, 1.0);
 
-    vec4 lensFlare = vec4(0.0);
+    // Used to create a diffraction pattern using a simulated starburst texture
+    float starBurstOffset = (fs_CameraPos[0] + fs_CameraPos[1] + fs_CameraPos[2]) / 2000.0;
 
-
-
-    float starBurstOffset = (fs_CameraPos[0] + fs_CameraPos[1] + fs_CameraPos[2]) / 10000.0;
-
+    // Determine distance of the fragment to center of the image
     vec2 centerVec = uvIn - vec2(0.5);
     float d = length(centerVec);
+
+    // Calculate the angle from the horizon to this fragment
     float radians = acos(centerVec.x / d) / (2.0 * 3.14159265359);
 
-
+    // Create a mask based on the diffraction pattern
     float mask = linearNoise(radians + starBurstOffset) * linearNoise(radians - starBurstOffset * 0.5);
-
-    //float mask = linearNoise(radians);
-
-
     mask = clamp(mask + (1.0 - smoothstep(0.0, 0.3, d)), 0.0, 1.0);
-
     mask *= (0.5 / d);
-
     mask *= mask;
-
     mask = clamp(mask, 0.0, 1.0);
 
-
-
-    vec3 rainbowTex = coloredLinearNoise(d);
+    //Get the color value for the simulated circular rainbow texture at this fragment
+    vec3 rainbowTex = coloredRainbow(d);
 
     rainbowTex = clamp(rainbowTex + (1.0 - smoothstep(0.1, 0.3, d)), 0.0, 1.0);
-
 
 
     for(int i = 1; i <= numGhosts; i++)
@@ -193,7 +191,7 @@ vec3 lensFlare(vec2 uvIn)
         vec4 inColor = vec4(textureDistorted(u_RenderedTexture,
                          offset, direction, distortion), 1.0);
 
-        // Set colors near white to pure white, for testing purposes
+        // Set colors of input texture near white to pure white, for testing purposes
         if(inColor[0] + inColor[1] + inColor[2] > 2.8)
         {
             inColor = vec4(1.0, 1.0, 1.0, 1.0);
@@ -206,10 +204,8 @@ vec3 lensFlare(vec2 uvIn)
         lensFlare += scaledValue * weight;
     }
 
-    //color = vec3(result);
 
-
-
+    // Create a lens halo at exterior of image
 
     float haloWidth = 0.5;
 
@@ -218,71 +214,50 @@ vec3 lensFlare(vec2 uvIn)
     float haloWeight = length(vec2(0.5) - fract(uvIn + haloVec)) / length(vec2(0.5));
     haloWeight = pow(1.0 - haloWeight, 5.0);
 
-
     //vec4 inColor = texture(u_RenderedTexture, fs_UV + haloVec);
     // Chromatic Abberation
     vec4 inColor = vec4(textureDistorted(u_RenderedTexture,
                      uvIn + haloVec, direction, distortion), 1.0);
 
-    // Set colors near white to pure white, for testing purposes
+    // Set colors of input texture near white to pure white, for testing purposes
     if(inColor[0] + inColor[1] + inColor[2] > 2.8)
     {
         inColor = vec4(1.0, 1.0, 1.0, 1.0);
     }
 
-
+    // Only create halos for parts of the image brighter than the threshold
     vec4 scaledValue = max(vec4(0.0), inColor + bias) * scale;
 
+    // Modulate the halo by the simulated rainbow texture
     scaledValue *= vec4(rainbowTex, 1.0);
 
+    lensFlare += scaledValue * haloWeight;
 
 
+    // Modulate the flare by the simulated dust texture
     float dustVal = 100.0 * pow(clamp(fbm(uvIn[0], uvIn[1]), 0.0, 0.9), 0.9);
-
     dustVal += 0.1;
-
     clamp(dustVal, 0.0, 1.0);
-
     dustVal = sqrt(dustVal);
-
-
-    vec3 postDustHaloColor = dustVal * vec3(scaledValue * haloWeight);
-
     lensFlare *= dustVal;
 
-    lensFlare += vec4(postDustHaloColor, 0.0);
-
-
-
+    // Modulate the flare by the diffraction pattern
     lensFlare = ((mask * lensFlare) + (1.0 * lensFlare)) / 2.0;
-
 
     lensFlare = clamp(lensFlare, 0.0, 1.0);
 
+    // Decrease brightness of flare to make it more subtle
     lensFlare *= 0.75;
 
-
-    outColor += vec3(lensFlare);
-
-    return outColor;
-
-
-    //color = vec3(dustVal);
-
-    //vec3 rainbow = clamp(rainbowTex + (1.0 - smoothstep(0.1, 0.3, d)), 0.0, 1.0);
-
-    //color = mix(rainbow, color, 0.5);
+    return vec3(lensFlare);
 }
-
-
 
 
 void main()
 {
-    // Set colors near white to pure - only for testing purposes
-
     vec4 origColor = texture(u_RenderedTexture, fs_UV);
 
+    // Set colors near white to pure white - only for testing purposes
     if(origColor[0] + origColor[1] + origColor[2] > 2.8)
     {
         origColor = vec4(1.0, 1.0, 1.0, 1.0);
@@ -295,8 +270,9 @@ void main()
 
 
     // Gaussian Blur on lens flare
-    // This method is computationally expensive;
-    // should switch to 2-pass texture-based version
+    // Quickly implemented Gaussian Blur on flaring; slows down performance noticably
+    // Texture-based blurring would be much better
+
     float offset[3] = float[](0.0, 1.3846153846, 3.2307692308);
 
     for (int i=1; i<3; i++)
@@ -305,6 +281,7 @@ void main()
 
         color += lensFlare(fs_UV - vec2(0.0, offset[i] / u_Dimensions));
     }
+
 
 }
 

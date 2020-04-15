@@ -1,3 +1,5 @@
+// Created by Adam Mally, modified by Nathan Devlin
+
 #pragma once
 
 #include <openglcontext.h>
@@ -32,6 +34,7 @@ public:
 
     // Getter functions for various GL data
     virtual GLenum drawMode();
+
     int elemCount();
 
     // Call these functions when you want to call glGenBuffers on the buffers stored in the Drawable

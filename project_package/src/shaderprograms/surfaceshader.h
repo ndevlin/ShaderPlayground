@@ -1,3 +1,5 @@
+// Created by Adam Mally, modified by Nathan Devlin
+
 #pragma once
 
 #include <QString>
@@ -13,7 +15,6 @@ public:
     int attrNor; // A handle for the "in" vec4 representing vertex normal in the vertex shader
     int attrUV; // A handle for the "in" vec2 representing the UV coordinates in the vertex shader
 
-
 public:
     SurfaceShader(OpenGLContext* context);
     virtual ~SurfaceShader();
@@ -22,6 +23,5 @@ public:
     virtual void setupMemberVars() override;
     // Draw the given object to our screen using this ShaderProgram's shaders
     virtual void draw(Drawable &d, int textureSlot) override;
-
 
 };

@@ -1,4 +1,4 @@
-// Modified by Nathan Devlin for 560 HW #4
+// Declarations by Adam Mally, implementation by Nathan Devlin
 
 #include "mesh.h"
 #include <tinyobj/tiny_obj_loader.h>
@@ -20,7 +20,7 @@ void Mesh::createCube(const char *textureFile, const char *bgTextureFile)
     mp_bgTexture->create(bgTextureFile);
 
 
-    // TODO: Create VBO data for positions, normals, UVs, and indices
+    // VBO data for positions, normals, UVs, and indices
 
     std::vector<glm::vec4> pos {
                                 // First Face
@@ -135,7 +135,7 @@ void Mesh::createCube(const char *textureFile, const char *bgTextureFile)
                              8, 9, 10, 8, 10, 11, 12, 13, 14, 12, 14, 15,
                              16, 17, 18, 16, 18, 19, 20, 21, 22, 20, 22, 23};
 
-    count = 36; // TODO: Set "count" to the number of indices in your index VBO
+    count = 36; // Sets "count" to the number of indices in the index VBO
 
     generateIdx();
     context->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufIdx);
@@ -159,8 +159,7 @@ void Mesh::create()
 {
     // Does nothing, as we have two separate VBO data
     // creation functions: createFromOBJ, which creates
-    // our mesh VBOs from OBJ file data, and createCube,
-    // which you will implement.
+    // our mesh VBOs from OBJ file data, and createCube
 }
 
 void Mesh::bindTexture() const

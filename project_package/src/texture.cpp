@@ -1,3 +1,5 @@
+// Created by Adam Mally, modified by Nathan Devlin
+
 #include "texture.h"
 #include <QImage>
 #include <QGLWidget>
@@ -29,9 +31,7 @@ void Texture::load(int texSlot = 0)
     context->glActiveTexture(GL_TEXTURE0 + texSlot);
     context->glBindTexture(GL_TEXTURE_2D, m_textureHandle);
 
-    // These parameters need to be set for EVERY texture you create
-    // They don't always have to be set to the values given here, but they do need
-    // to be set
+    // These parameters need to be set for every texture
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);

@@ -1,3 +1,5 @@
+// Created by Adam Mally
+
 #include "mygl.h"
 
 void MyGL::slot_setCurrentSurfaceShaderProgram(int s)

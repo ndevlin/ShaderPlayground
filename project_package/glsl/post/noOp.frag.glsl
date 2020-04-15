@@ -15,16 +15,4 @@ void main()
 {
     color = texture(u_RenderedTexture, fs_UV).rgb;
 
-
-    /*
-    float near = 0.1;
-    float far = 1000.f;
-
-    float z = color.r * 2.0 - 1.0;
-    float depth = (2.0 * near * far) / (far + near - z * (far - near));
-
-    depth /= 10.f;
-
-    color = vec3(depth);
-    */
 }

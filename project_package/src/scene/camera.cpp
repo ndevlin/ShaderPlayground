@@ -1,3 +1,5 @@
+// Created by Adam Mally, modified by Nathan Devlin
+
 #include "camera.h"
 
 #include <la.h>
@@ -92,6 +94,7 @@ void Camera::RotateAboutUp(float deg)
     ref = ref + eye;
     RecomputeAttributes();
 }
+
 void Camera::RotateAboutRight(float deg)
 {
     glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), deg, right);

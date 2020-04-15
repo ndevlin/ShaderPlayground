@@ -1,4 +1,8 @@
+// Created by Adam Mally, modified by Nathan Devlin
+
 #ifndef MAINWINDOW_H
+// Created by Adam Mally, modified by Nathan Devlin
+
 #define MAINWINDOW_H
 
 #include <QMainWindow>
@@ -6,8 +10,9 @@
 #include "shadercontrols.h"
 
 
-namespace Ui {
-class MainWindow;
+namespace Ui
+{
+    class MainWindow;
 }
 
 
@@ -26,7 +31,9 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+
     ShaderControls *shaderControls;
+
 };
 
 

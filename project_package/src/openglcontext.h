@@ -1,3 +1,5 @@
+// Created by Adam Mally
+
 #ifndef GLWIDGET277_H
 #define GLWIDGET277_H
 

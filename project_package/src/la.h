@@ -1,3 +1,5 @@
+// Created by Adam Mally, modified by Nathan Devlin
+
 #ifndef LA
 #define LA
 #define GLM_CIS460  // Don't copy this include!
@@ -15,7 +17,8 @@
 #include<QVector4D>
 
 /// 460 linear algebra namespace. Functions used to convert glm data types to Qt data types
-namespace la {
+namespace la
+{
     QMatrix4x4 to_qmat(const glm::mat4 &m);
     QVector4D to_qvec(const glm::vec4 &v);
 }

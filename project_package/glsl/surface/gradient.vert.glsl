@@ -1,4 +1,4 @@
-// Written by Nathan Devlin for 560 HW #4, 10/1/19
+// Written by Nathan Devlin 10/1/19
 
 #version 150
 
@@ -16,7 +16,6 @@ out vec3 fs_LightVec;
 
 void main()
 {
-    // TODO Homework 4
     fs_Nor = normalize(u_ModelInvTr * vec3(vs_Nor));
 
     vec4 modelposition = u_Model * vs_Pos;

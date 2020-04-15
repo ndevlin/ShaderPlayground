@@ -1,3 +1,5 @@
+// Created by Adam Mally, modified by Nathan Devlin
+
 #include "drawable.h"
 #include <la.h>
 
@@ -62,7 +64,8 @@ void Drawable::generateUV()
 
 bool Drawable::bindIdx()
 {
-    if(idxBound) {
+    if(idxBound)
+    {
         context->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufIdx);
     }
     return idxBound;
@@ -70,7 +73,8 @@ bool Drawable::bindIdx()
 
 bool Drawable::bindPos()
 {
-    if(posBound){
+    if(posBound)
+    {
         context->glBindBuffer(GL_ARRAY_BUFFER, bufPos);
     }
     return posBound;
@@ -78,7 +82,8 @@ bool Drawable::bindPos()
 
 bool Drawable::bindNor()
 {
-    if(norBound){
+    if(norBound)
+    {
         context->glBindBuffer(GL_ARRAY_BUFFER, bufNor);
     }
     return norBound;
@@ -86,7 +91,8 @@ bool Drawable::bindNor()
 
 bool Drawable::bindUV()
 {
-    if(uvBound){
+    if(uvBound)
+    {
         context->glBindBuffer(GL_ARRAY_BUFFER, bufUV);
     }
     return uvBound;

@@ -1,4 +1,4 @@
-// Modified by Nathan Devlin 10/16/19
+// Written by Nathan Devlin 10/16/19
 
 #version 150
 

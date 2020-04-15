@@ -1,3 +1,5 @@
+// Created by Adam Mally, modified by Nathan Devlin
+
 #include "mygl.h"
 #include <QKeyEvent>
 #include <QApplication>
@@ -21,13 +23,11 @@ void MyGL::mouseMoveEvent(QMouseEvent *e)
         m_camera.RotatePhi(-diff.x);
         m_camera.RotateTheta(-diff.y);
 
-        // Added for handle part of assignment
         // Updates the shader's camera position variable
         mp_progSurfaceCurrent->setGPUCamPos(mp_progSurfaceCurrent->attrCamPos, glm::vec4(m_camera.eye, 1.f));
 
         mp_progPostprocessCurrent->setGPUCamPos(mp_progPostprocessCurrent->attrCamPos, glm::vec4(m_camera.eye, 1.f));
     }
-
     else if(e->buttons() & Qt::RightButton)
     {
         // Panning
@@ -48,7 +48,8 @@ void MyGL::keyPressEvent(QKeyEvent *e)
 {
 
     float amount = 2.0f;
-    if(e->modifiers() & Qt::ShiftModifier){
+    if(e->modifiers() & Qt::ShiftModifier)
+    {
         amount = 10.0f;
     }
 

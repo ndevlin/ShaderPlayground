@@ -1,3 +1,5 @@
+// Created by Adam Mally
+
 #include "shadercontrols.h"
 #include "ui_shadercontrols.h"
 

@@ -1,3 +1,5 @@
+// Created by Adam Mally, modified by Nathan Devlin
+
 #include "shaderprogram.h"
 #include <QFile>
 #include <iostream>
@@ -40,11 +42,13 @@ void ShaderProgram::create(const char *vertfile, const char *fragfile)
     // Check if everything compiled OK
     GLint compiled;
     context->glGetShaderiv(vertShader, GL_COMPILE_STATUS, &compiled);
-    if (!compiled) {
+    if (!compiled)
+    {
         printShaderInfoLog(vertShader);
     }
     context->glGetShaderiv(fragShader, GL_COMPILE_STATUS, &compiled);
-    if (!compiled) {
+    if (!compiled)
+    {
         printShaderInfoLog(fragShader);
     }
 
@@ -56,7 +60,8 @@ void ShaderProgram::create(const char *vertfile, const char *fragfile)
     // Check for linking success
     GLint linked;
     context->glGetProgramiv(prog, GL_LINK_STATUS, &linked);
-    if (!linked) {
+    if (!linked)
+    {
         printLinkInfoLog(prog);
     }
 
@@ -67,8 +72,6 @@ void ShaderProgram::useMe()
 {
     context->glUseProgram(prog);
 }
-
-
 
 
 // Helper function to set the camera position variable in the shader, if it exists
@@ -85,9 +88,6 @@ void ShaderProgram::setGPUCamPos(const int handle, const glm::vec4 &camPos)
 }
 
 
-
-
-
 void ShaderProgram::setViewProjMatrix(const glm::mat4 &v,
                                       const glm::mat4 &p,
                                       const glm::mat4 &pInv,
@@ -97,7 +97,8 @@ void ShaderProgram::setViewProjMatrix(const glm::mat4 &v,
     // Tell OpenGL to use this shader program for subsequent function calls
     useMe();
 
-    if(unifView != -1) {
+    if(unifView != -1)
+    {
     // Pass a 4x4 matrix into a uniform variable in our shader
                     // Handle to the matrix variable on the GPU
     context->glUniformMatrix4fv(unifView,
@@ -109,7 +110,8 @@ void ShaderProgram::setViewProjMatrix(const glm::mat4 &v,
                        &v[0][0]);
     }
 
-    if(unifProj != -1) {
+    if(unifProj != -1)
+    {
     // Pass a 4x4 matrix into a uniform variable in our shader
                     // Handle to the matrix variable on the GPU
     context->glUniformMatrix4fv(unifProj,
@@ -122,8 +124,8 @@ void ShaderProgram::setViewProjMatrix(const glm::mat4 &v,
     }
 
 
-
-    if(unifProjInv != -1) {
+    if(unifProjInv != -1)
+    {
     // Pass a 4x4 matrix into a uniform variable in our shader
                     // Handle to the matrix variable on the GPU
     context->glUniformMatrix4fv(unifProjInv,
@@ -136,9 +138,8 @@ void ShaderProgram::setViewProjMatrix(const glm::mat4 &v,
     }
 
 
-
-
-    if(unifInverseViewMat != -1) {
+    if(unifInverseViewMat != -1)
+    {
     // Pass a 4x4 matrix into a uniform variable in our shader
                     // Handle to the matrix variable on the GPU
     context->glUniformMatrix4fv(unifInverseViewMat,
@@ -150,8 +151,8 @@ void ShaderProgram::setViewProjMatrix(const glm::mat4 &v,
                        &i[0][0]);
     }
 
-
-    if(unifCurrentToPrevMat != -1) {
+    if(unifCurrentToPrevMat != -1)
+    {
     // Pass a 4x4 matrix into a uniform variable in our shader
                     // Handle to the matrix variable on the GPU
     context->glUniformMatrix4fv(unifCurrentToPrevMat,
@@ -163,8 +164,6 @@ void ShaderProgram::setViewProjMatrix(const glm::mat4 &v,
                        &prev[0][0]);
     }
 
-
-
 }
 
 
@@ -172,7 +171,8 @@ void ShaderProgram::setModelMatrix(const glm::mat4 &model)
 {
     useMe();
 
-    if (unifModel != -1) {
+    if (unifModel != -1)
+    {
         // Pass a 4x4 matrix into a uniform variable in our shader
                         // Handle to the matrix variable on the GPU
         context->glUniformMatrix4fv(unifModel,
@@ -185,7 +185,8 @@ void ShaderProgram::setModelMatrix(const glm::mat4 &model)
 
     }
 
-    if (unifModelInvTr != -1) {
+    if (unifModelInvTr != -1)
+    {
         glm::mat3 modelinvtr = glm::inverse(glm::transpose(glm::mat3(model)));
         // Pass a 4x4 matrix into a uniform variable in our shader
                         // Handle to the matrix variable on the GPU
@@ -200,10 +201,6 @@ void ShaderProgram::setModelMatrix(const glm::mat4 &model)
 }
 
 
-
-
-
-
 void ShaderProgram::setTime(int t)
 {
     useMe();
@@ -214,7 +211,8 @@ void ShaderProgram::setTime(int t)
     }
 }
 
-char* ShaderProgram::textFileRead(const char* fileName) {
+char* ShaderProgram::textFileRead(const char* fileName)
+{
     char* text;
 
     if (fileName != NULL) {
@@ -228,7 +226,7 @@ char* ShaderProgram::textFileRead(const char* fileName) {
             if (count > 0) {
                 text = (char*)malloc(sizeof(char) * (count + 1));
                 count = fread(text, sizeof(char), count, file);
-                text[count] = '\0';	//cap off the string with a terminal symbol, fixed by Cory
+                text[count] = '\0';	//cap off the string with a terminal symbol
             }
             fclose(file);
         }
@@ -281,7 +279,8 @@ void ShaderProgram::printLinkInfoLog(int prog)
 
     // should additionally check for OpenGL errors here
 
-    if (infoLogLen > 0) {
+    if (infoLogLen > 0)
+    {
         infoLog = new GLchar[infoLogLen];
         // error check for fail to allocate memory omitted
         context->glGetProgramInfoLog(prog, infoLogLen, &charsWritten, infoLog);

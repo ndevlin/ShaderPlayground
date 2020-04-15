@@ -1,3 +1,5 @@
+// Created by Adam Mally, modified by Nathan Devlin
+
 #include <mainwindow.h>
 
 #include <QApplication>
@@ -36,9 +38,11 @@ int main(int argc, char *argv[])
     /***/ if (qgetenv("CIS277_AUTOTESTING") != nullptr) format.setSamples(0);
 
     QSurfaceFormat::setDefaultFormat(format);
+
     debugFormatVersion();
 
     MainWindow w;
+
     w.show();
 
     return a.exec();

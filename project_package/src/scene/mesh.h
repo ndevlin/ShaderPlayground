@@ -1,3 +1,5 @@
+//Declarations by Adam Mally
+
 #pragma once
 
 #include "drawable.h"

@@ -1,9 +1,12 @@
+// Created by Adam Mally
+
 #ifndef SHADERCONTROLS_H
 #define SHADERCONTROLS_H
 
 #include <QWidget>
 
-namespace Ui {
+namespace Ui
+{
 class ShaderControls;
 }
 

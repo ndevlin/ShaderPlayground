@@ -1,9 +1,9 @@
-// Written by Nathan Devlin 4/20/20
+// Written by Nathan Devlin 3/20/20
 
 #version 150
 
 in vec2 fs_UV;
-in vec4 fs_CameraPos;
+in vec4 fs_fragRelToCamPos;
 
 out vec3 color;
 
@@ -21,30 +21,29 @@ uniform sampler2D u_DepthTexture;
 
 void main()
 {
-
     // Get depth from depth texture
     vec4 depthVec = texture(u_DepthTexture, fs_UV);
     float depth = depthVec[0];
 
     // Linearize depth to give distance in world coords from camera
+
     float near = 0.1f;
     float far = 1000.f;
 
+    // Calculate distance of this fragment from the camera
     float z = depth * 2.0 - 1.0;
     float worldDistFromCam = (1.0 * near * far) / (far + near - z * (far - near));
 
-
+    // Calculate the scrennspace coordinates of this fragment
     vec4 screenPos = vec4(2 * fs_UV[0] - 1, 2 * fs_UV[1] - 1, depth, 1.f);
 
+    vec4 fragRelToCamPos = vec4(0.f, 0.f, 0.f, 1.f);
 
-    vec4 cameraPos = vec4(0.f, 0.f, 0.f, 1.f);
+    fragRelToCamPos.x = worldDistFromCam * (screenPos.x / u_Proj[0][0]);
+    fragRelToCamPos.y = worldDistFromCam * (screenPos.y / u_Proj[1][1]);
+    fragRelToCamPos.z = -1 * worldDistFromCam;
 
-    cameraPos.x = worldDistFromCam * (screenPos.x / u_Proj[0][0]);
-    cameraPos.y = worldDistFromCam * (screenPos.y / u_Proj[1][1]);
-    cameraPos.z = -1 * worldDistFromCam;
-
-
-    vec4 previousScreenSpace = u_CurrentToPrevMat * cameraPos;
+    vec4 previousScreenSpace = u_CurrentToPrevMat * fragRelToCamPos;
     previousScreenSpace.xyz /= previousScreenSpace.w;
     previousScreenSpace.xy = previousScreenSpace.xy * 0.5f + 0.5f;
 
@@ -57,11 +56,17 @@ void main()
     float blurMag = length(blurVec);
     blurVec = normalize(blurVec);
 
+    // Maximum blur as percentage of screen dimensions
     blurMag = clamp(blurMag, 0.f, 0.1);
+
+    // Decreases small blurs to mitigate jittering
     blurMag *= ((blurMag * 10) * (blurMag * 10));
+
+    // Decreases blur of fragments that are far from the camera
     blurMag /= (1.f + (worldDistFromCam / 100));
 
     blurVec = blurMag * blurVec;
+
 
     float divideFactor = 0.f;
 

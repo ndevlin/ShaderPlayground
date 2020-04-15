@@ -1,3 +1,5 @@
+// Created by Adam Mally, modified by Nathan Devlin
+
 #include "quad.h"
 
 Quad::Quad(OpenGLContext *context) : Drawable(context)

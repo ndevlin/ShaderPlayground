@@ -1,3 +1,5 @@
+// Framework by Adam Mally, implementation by Nathan Devlin
+
 #ifndef MYGL_H
 #define MYGL_H
 
@@ -31,6 +33,7 @@ private:
     // The collection of surface shaders available to the user. This vector is only
     // ever modified once, in createShaders().
     std::vector<std::shared_ptr<SurfaceShader>> m_surfaceShaders;
+
     // The collection of post-process shaders available to the user. This vector is only
     // ever modified once, in createShaders().
     std::vector<std::shared_ptr<PostProcessShader>> m_postprocessShaders;
@@ -39,16 +42,19 @@ private:
     // Used by paintGL to determine which surface shader to apply to the model.
     // Modified by slot_setCurrentSurfaceShaderProgram().
     SurfaceShader* mp_progSurfaceCurrent;
+
     // A pointer to the post-process shader currently being used to render the scene.
     // Used by paintGL to determine which post-process shader to apply to the scene.
     // Modified by slot_setCurrentPostprocessShaderProgram().
     PostProcessShader* mp_progPostprocessCurrent;
+
     // A pointer to our no-operation post-process shader, used to draw the scene's background
     PostProcessShader* mp_progPostprocessNoOp;
 
     // The collection of renderable models available to the user. This vector is only
     // modified once, in createMeshes().
     std::vector<std::shared_ptr<Mesh>> m_models;
+
     // A pointer to the model that is currently being rendered. Used by paintGL to determine
     // which model to render.
     Mesh* mp_modelCurrent;
@@ -64,6 +70,7 @@ private:
     // ourselves to perform render passes. The 0th frame buffer is always
     // written to by the render pass that uses the currently bound surface shader.
     GLuint m_frameBuffer;
+
     // A collection of handles to the textures used by the frame buffers.
     // m_frameBuffers[i] writes to m_renderedTextures[i].
     GLuint m_renderedTexture;
@@ -81,11 +88,11 @@ private:
     // In paintGL, it is passed to the currently bound surface and post-process shaders,
     // if they have a uniform variable for time.
     int m_time;
+
     // A variable used to track the mouse's previous position when
     // clicking and dragging on the GL viewport. Used to move the camera
     // in the scene.
     glm::vec2 m_mousePosPrev;
-
 
 
     //Store the current frame's view proj matrix
@@ -100,15 +107,18 @@ private:
     // used to store render passes. Invoked
     // once in initializeGL().
     void createRenderBuffers();
+
     // Sets up the different shaders used to
     // render the scene. Invoked once in
     // initializeGL().
     void createShaders();
+
     // Loads the mesh scenes into m_models.
     // Also sets up the VBOs and other GL data
     // of the meshes.
     // Invoked once in initializeGL().
     void createMeshes();
+
     // Loads the different matcap textures
     // into memory and stores them on the
     // GPU. Invoked once in initializeGL().
@@ -134,15 +144,19 @@ public:
     ~MyGL();
 
     void initializeGL();
-    void resizeGL(int w, int h);
-    void paintGL();
 
+    void resizeGL(int w, int h);
+
+    void paintGL();
 
 
 protected:
     void keyPressEvent(QKeyEvent *e);
+
     void mousePressEvent(QMouseEvent* e);
+
     void mouseMoveEvent(QMouseEvent* e);
+
     void wheelEvent(QWheelEvent* e);
 
 public slots:
