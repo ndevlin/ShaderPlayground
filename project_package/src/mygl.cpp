@@ -1,5 +1,7 @@
 // Written by Nathan Devlin
 
+//
+
 #include "mygl.h"
 #include <la.h>
 #include <QResizeEvent>

@@ -2,6 +2,8 @@
 
 // Pointillism Fragment Shader
 
+//
+
 #version 150
 
 uniform ivec2 u_Dimensions;
