@@ -32,7 +32,7 @@ vec3 textureDistorted(
 // Used to procedurally generate a dust texture
 float noise2D(vec2 n)
 {
-    float toReturn = (fract(sin(dot(n, vec2(12.9898, 4.1414))) * 43758.5453));
+    float toReturn = fract(sin(dot(n, vec2(12.9898, 4.1414))) * 43758.5453);
 
     return 10.0 * pow(toReturn, 1000.0);
 }
@@ -92,7 +92,7 @@ float fbm(float x, float y)
 // Procedurally emulates a 1-D black and white random texture
 float linearNoise(float xCoord)
 {
-    return fract(sin(int(xCoord * 2500) % 1234) * 1);
+    return fract(sin(int(xCoord * 2500) % 1234));
 }
 
 
@@ -101,17 +101,15 @@ vec3 coloredRainbow(float xCoord)
 {
     vec3 result = vec3(0.0);
 
+    result[0] = sin(12.0 * (xCoord - 0.3));
 
-    result[0] = sin(12 * (xCoord - 0.3));
+    result[1] = cos(8.0 * (xCoord - 0.2)) + sin(8.0 * (xCoord - 0.2)) - 0.5;
 
-    result[1] = cos(8 * (xCoord - 0.2)) + sin(8 * (xCoord - 0.2)) - 0.5;
+    result[2] = cos(6.0 * (xCoord - 0.1));
 
-    result[2] = cos(6 * (xCoord - 0.1));
-
+    // Desaturate and brighten the result
     result -= vec3(0.2, 0.2, 0.2);
-
     result = clamp(result, 0.0, 0.8);
-
     result += vec3(0.4, 0.4, 0.4);
 
     return result;
@@ -126,7 +124,7 @@ vec3 lensFlare(vec2 uvIn)
     // Mirrors bright spots across the center of the image
     vec2 newCoord = -uvIn + vec2(1.0);
 
-    // Number of repeated ghosts of bright spot
+    // Number of repeated ghosts of bright spots
     int numGhosts = 5;
 
     float ghostDispersal = 0.5;
@@ -138,7 +136,7 @@ vec3 lensFlare(vec2 uvIn)
 
     vec3 distortion = vec3(-texelSize.x * distortionAmount, 0.0, texelSize.x * distortionAmount);
 
-    vec2 ghostVec = (vec2(0.5)  -uvIn) * ghostDispersal;
+    vec2 ghostVec = ghostDispersal * (vec2(0.5) - uvIn);
 
     vec2 direction = normalize(ghostVec);
 
@@ -147,8 +145,6 @@ vec3 lensFlare(vec2 uvIn)
     vec4 scale = vec4(1000.0, 1000.0, 1000.0, 1.0);
     vec4 bias = vec4(-0.999, -0.999, -0.999, 1.0);
 
-    // Used to create a diffraction pattern using a simulated starburst texture
-    float starBurstOffset = (fs_CameraPos[0] + fs_CameraPos[1] + fs_CameraPos[2]) / 2000.0;
 
     // Determine distance of the fragment to center of the image
     vec2 centerVec = uvIn - vec2(0.5);
@@ -156,6 +152,10 @@ vec3 lensFlare(vec2 uvIn)
 
     // Calculate the angle from the horizon to this fragment
     float radians = acos(centerVec.x / d) / (2.0 * 3.14159265359);
+
+
+    // Modulate the starburst pattern when the camera moves
+    float starBurstOffset = (fs_CameraPos[0] + fs_CameraPos[1] + fs_CameraPos[2]) / 2000.0;
 
     // Create a mask based on the diffraction pattern
     float mask = linearNoise(radians + starBurstOffset) * linearNoise(radians - starBurstOffset * 0.5);
@@ -178,7 +178,7 @@ vec3 lensFlare(vec2 uvIn)
         weight = pow(1.0 - weight, 2.0);
 
         //vec4 inColor = texture(u_RenderedTexture, offset);
-        // Chromatic Abberation
+        // Chromatic Aberration
         vec4 inColor = vec4(textureDistorted(u_RenderedTexture,
                          offset, direction, distortion), 1.0);
 
@@ -206,7 +206,7 @@ vec3 lensFlare(vec2 uvIn)
     haloWeight = pow(1.0 - haloWeight, 5.0);
 
     //vec4 inColor = texture(u_RenderedTexture, fs_UV + haloVec);
-    // Chromatic Abberation
+    // Chromatic Aberration
     vec4 inColor = vec4(textureDistorted(u_RenderedTexture,
                      uvIn + haloVec, direction, distortion), 1.0);
 
@@ -238,7 +238,7 @@ vec3 lensFlare(vec2 uvIn)
     lensFlare = clamp(lensFlare, 0.0, 1.0);
 
     // Decrease brightness of flare to make it more subtle
-    lensFlare *= 0.75;
+    //lensFlare *= 0.75;
 
     return vec3(lensFlare);
 }
